@@ -19,25 +19,21 @@ app.add_middleware(
 
 @app.post("/process", tags=["image-processing"])
 async def upscaleImage(file: UploadFile = File(...)):
-    image = Image.open(file.file)
+    
     inputFolder = "./backend/src/ESRGAN/LR"
-    image.save(f"{inputFolder}/img.jpeg")
+    # # delete contents of the input folder beforehand
+    # folder = Path(inputFolder)
+    # for item in folder.iterdir():
+    #     if item.is_file() or item.is_symlink():
+    #         item.unlink()
+    #     else:
+    #         shutil.rmtree(item)
 
-    # delete contents of the input folder beforehand
-    folder = Path(inputFolder)
-    for item in folder.iterdir():
-        if item.is_file() or item.is_symlink():
-            item.unlink()
-        else:
-            shutil.rmtree(item)
+    image = Image.open(file.file)
+    image.save(f"{inputFolder}/img.jpeg")
 
     subprocess.run(["./backend/venv/Scripts/python.exe", "./backend/src/ESRGAN/test.py"])
 
     output_path = "backend/src/ESRGAN/results"
-    sleep(5)
-    while(True):
-        with open("backend/signal.txt") as f:
-            signal = f.read()
-            if(signal == "1"):
-                return FileResponse(f"{output_path}/img_rlt.png", media_type="image/png")
-        sleep(1)
+    print("executed main.py complete")
+    return FileResponse(f"{output_path}/img_rlt.png", media_type="image/png")
