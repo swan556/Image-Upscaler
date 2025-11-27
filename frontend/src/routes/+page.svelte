@@ -7,10 +7,6 @@
 		image = input.files?.[0] ?? null;
 	}
 
-	const status = async () => {
-		const res = await fetch()
-	}
-
 	const upload = async () => {
 		if (!image) return;
 

@@ -36,7 +36,4 @@ async def upscaleImage(file: UploadFile = File(...)):
 
     output_path = "backend/src/ESRGAN/results"
     print("executed main.py complete")
-    return FileResponse(f"{output_path}/img_rlt.png", media_type="image/png")
-
-@app.get("/status")
-async def 
+    return FileResponse(f"{output_path}/img_rlt.png", media_type="image/png") 
