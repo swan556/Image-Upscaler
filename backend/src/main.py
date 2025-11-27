@@ -21,13 +21,13 @@ app.add_middleware(
 async def upscaleImage(file: UploadFile = File(...)):
     
     inputFolder = "./backend/src/ESRGAN/LR"
-    # # delete contents of the input folder beforehand
-    # folder = Path(inputFolder)
-    # for item in folder.iterdir():
-    #     if item.is_file() or item.is_symlink():
-    #         item.unlink()
-    #     else:
-    #         shutil.rmtree(item)
+    # delete contents of the input folder beforehand
+    folder = Path(inputFolder)
+    for item in folder.iterdir():
+        if item.is_file() or item.is_symlink():
+            item.unlink()
+        else:
+            shutil.rmtree(item)
 
     image = Image.open(file.file)
     image.save(f"{inputFolder}/img.jpeg")
@@ -37,3 +37,6 @@ async def upscaleImage(file: UploadFile = File(...)):
     output_path = "backend/src/ESRGAN/results"
     print("executed main.py complete")
     return FileResponse(f"{output_path}/img_rlt.png", media_type="image/png")
+
+@app.get("/status")
+async def 
