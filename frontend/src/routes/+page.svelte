@@ -1,19 +1,23 @@
 <script lang="ts">
-	let image: File | null = null;
-	let processed_image: string | null = null;
+	let images: FileList | null = null;
+	let processed_images: string[] = [];
 
 	function handleFileChange(event: Event) {
 		const input = event.currentTarget as HTMLInputElement;
-		image = input.files?.[0] ?? null;
+		images = input.files ?? null;
 	}
 
 	const upload = async () => {
-		if (!image) return;
+		if (!images || images.length === 0) return;
 
 		const formData = new FormData();
-		formData.append("file", image);
 
-		const res = await fetch("http://localhost:8000/process", {
+		// append all images under the same field name (FastAPI expects this)
+		for (let i = 0; i < images.length; i++) {
+			formData.append("files", images[i]);   
+		}
+
+		const res = await fetch("http://localhost:8000/images", {
 			method: "POST",
 			body: formData
 		});
@@ -23,15 +27,16 @@
 			return;
 		}
 
-		const blob = await res.blob();
-		processed_image = URL.createObjectURL(blob);
 	};
 </script>
 
-<input type="file" on:change={handleFileChange} />
+<!-- allow multiple file selection -->
+<input type="file" multiple on:change={handleFileChange} />
 <button on:click={upload}>Process</button>
 
-{#if processed_image}
-	<h3>Processed Image:</h3>
-	<img src={processed_image} alt="Processed" />
+{#if processed_images.length > 0}
+	<h3>Processed Images:</h3>
+	{#each processed_images as img}
+		<img src={img} alt="Processed" />
+	{/each}
 {/if}

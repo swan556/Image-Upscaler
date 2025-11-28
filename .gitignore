@@ -1,2 +1,3 @@
 backend\venv\
 backend\src\ESRGAN\models\RRDB_PSNR_x4.pth
+Upscaled-Images\
